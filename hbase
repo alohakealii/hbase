@@ -1,0 +1,7 @@
+#! /bin/bash
+
+# This file is placed in /usr/local/bin
+# to be able to use "hbase" as a shortcut
+# instead of "${HBASE_HOME}/bin/hbase"
+
+${HBASE_HOME}/bin/hbase "$@"
