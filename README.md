@@ -10,7 +10,6 @@ I moved the extracted folder (hbase-1.1.3) to `/opt/` and created the script, *h
 ### To simplify entering commands, I added the following to .bashrc:
 ```bash
 export HBASE_HOME=/opt/hbase-1.1.3
-export PATH=$PATH:$HBASE_HOME
 alias start-hbase=$HBASE_HOME/bin/start-hbase.sh
 alias stop-hbase=$HBASE_HOME/bin/stop-hbase.sh
 log-hbase() {
