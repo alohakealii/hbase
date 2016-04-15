@@ -40,21 +40,20 @@ scan 'wiki'
 # Before running import_from_wikipedia.rb
 alter 'wiki', {NAME=>'text', COMPRESSION=>'GZ', BLOOMFILTER=>'ROW'}
 
-# To download wiki and run import_from_wikipedia.rb:
-# curl <dump_url> | bzcat | ${HBASE_HOME}/bin/hbase shell import_from_wikipedia.rb
-# curl https://dumps.wikimedia.org/enwiki/20160305/enwiki-20160305-pages-articles-multistream.xml.bz2 | bzcat | ${HBASE_HOME}/bin/hbase shell import_from_wikipedia.rb
-
 
 ############ WIKI DUMP ###############
 =begin 
 
-dump_url ?= https://dumps.wikimedia.org/enwiki/20160305/enwiki-20160305-pages-articles-multistream.xml.bz2
+To download wiki and run import_from_wikipedia.rb:
+curl <dump_url> | bzcat | ${HBASE_HOME}/bin/hbase shell import_from_wikipedia.rb
 	
 Note that you should replace <dump_url> with the URL of a WikiMedia Founda-
 tion dump file of some kind. 2 You should use [project]-latest-pages-articles.xml.bz2
 for either the English Wikipedia (~6GB) 3 or the English Wiktionary (~185MB).
 These files contain all the most recent revisions of pages in the Main namespace.
 That is, they omit user pages, discussion pages, and so on.
+
+e.g.: curl https://dumps.wikimedia.org/enwiki/20160305/enwiki-20160305-pages-articles-multistream.xml.bz2 | bzcat | ${HBASE_HOME}/bin/hbase shell import_from_wikipedia.rb
 
 ############## DISK USAGE ###############
 
@@ -111,3 +110,28 @@ create 'links', {NAME => 'to', VERSIONS => 1, BLOOMFILTER => 'ROWCOL'},{NAME => 
 
 # Populate links table from wiki table
 # ${HBASE_HOME}/bin/hbase shell generate_wiki_links.rb
+
+
+#########################################
+###
+###        CLOUD
+###
+#########################################
+=begin
+
+sudo apt-get install automake bison flex g++ git libboost1.55-all-dev libevent-dev libssl-dev libtool make pkg-config thrift-compiler
+
+# Download from http://www.apache.org/dyn/closer.cgi?path=/thrift/0.9.3/thrift-0.9.3.tar.gz
+cd ~/Downloads
+tar -zxf thrift-0.9.3.tar.gz
+cd thrift-0.9.3
+./configure && make
+cd ..
+wget https://raw.githubusercontent.com/eljefe6a/HBaseThrift/master/Hbase.thrift
+thrift --gen rb ~/Downloads/Hbase.thrift
+${HBASE_HOME}/bin/hbase-daemon.sh start thrift -b 127.0.0.1
+
+# Make thrift_example.rb from book
+ruby /path/to/thrift_example.rb
+
+=end
