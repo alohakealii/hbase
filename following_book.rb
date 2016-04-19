@@ -114,7 +114,7 @@ create 'links', {NAME => 'to', VERSIONS => 1, BLOOMFILTER => 'ROWCOL'},{NAME => 
 
 #########################################
 ###
-###        CLOUD
+###        CLOUD  (Thrift)
 ###
 #########################################
 =begin
@@ -131,7 +131,22 @@ wget https://raw.githubusercontent.com/eljefe6a/HBaseThrift/master/Hbase.thrift
 thrift --gen rb ~/Downloads/Hbase.thrift
 ${HBASE_HOME}/bin/hbase-daemon.sh start thrift -b 127.0.0.1
 
-# Make thrift_example.rb from book
+# Make thrift_example.rb from book, then run:
 ruby /path/to/thrift_example.rb
 
 =end
+
+#########################################
+###
+###        CLOUD  (Whirr)
+###
+#########################################
+=begin
+	
+# Download KEYS, whirr-0.8.2.tar.gz, and whirr-0.8.2.tar.gz.asc from http://archive.apache.org/dist/whirr/
+cd Downloads
+gpg --import KEYS
+gpg --verify whirr-0.8.2.tar.gz.asc whirr-0.8.2.tar.gz
+
+	
+end
