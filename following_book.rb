@@ -143,10 +143,13 @@ ruby /path/to/thrift_example.rb
 #########################################
 =begin
 	
-# Download KEYS, whirr-0.8.2.tar.gz, and whirr-0.8.2.tar.gz.asc from http://archive.apache.org/dist/whirr/
+# Download KEYS, whirr-0.7.1.tar.gz, and whirr-0.7.1.tar.gz.asc from http://archive.apache.org/dist/whirr/
+# Use whirr-0.7.1, not 0.8.2
 cd Downloads
 gpg --import KEYS
-gpg --verify whirr-0.8.2.tar.gz.asc whirr-0.8.2.tar.gz
+gpg --verify whirr-0.7.1.tar.gz.asc whirr-0.7.1.tar.gz
 
-	
-end
+# Create AWS account and access keys for the account
+# Use keys in hbase.properties
+# Move hbase.properties and keys folder into whirr directory	
+=end
