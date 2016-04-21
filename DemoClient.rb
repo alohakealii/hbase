@@ -37,6 +37,12 @@ def printRow(rowresult)
   puts ""
 end
 
+def printRows(rowresults)
+  rowresults.each do |rowresult|
+    printRow(rowresult)
+  end
+end
+
 host = "localhost"
 port = 9090
 
@@ -117,7 +123,7 @@ m = Apache::Hadoop::Hbase::Thrift::Mutation.new
 m.column = "entry:"
 m.value = ""
 mutations << m
-client.mutateRow(t, "bar", mutations)
+client.mutateRow(t, " ", mutations)
 
 # this row name is valid utf8
 mutations = []
@@ -143,14 +149,11 @@ client.mutateRow(t, valid, mutations)
 # Run a scanner on the rows we just created
 puts "Starting scanner..."
 scanner = client.scannerOpen(t, "", ["entry:"])
-begin
-  while (true) 
-    printRow(client.scannerGet(scanner))
-  end
-rescue Apache::Hadoop::Hbase::Thrift::NotFound => nf
-  client.scannerClose(scanner)
-  puts "Scanner finished"
-end
+
+printRows(client.scannerGet(scanner))
+
+client.scannerClose(scanner)
+puts "Scanner finished"
 
 #
 # Run some operations on a bunch of rows.
@@ -165,8 +168,8 @@ end
   m.value = "DELETE_ME"
   mutations << m
   client.mutateRow(t, row, mutations)
-  printRow(client.getRow(t, row, dummy_attributes))
-  client.deleteAllRow(t, row, dummy_attributes)
+  printRows(client.getRow(t, row))
+  client.deleteAllRow(t, row)
 
   mutations = []
   m = Apache::Hadoop::Hbase::Thrift::Mutation.new
@@ -178,7 +181,7 @@ end
   m.value = "FOO"
   mutations << m
   client.mutateRow(t, row, mutations)
-  printRow(client.getRow(t, row, dummy_attributes))
+  printRows(client.getRow(t, row))
 
   mutations = []
   m = Apache::Hadoop::Hbase::Thrift::Mutation.new
@@ -189,8 +192,8 @@ end
   m.column = "entry:num"
   m.value = "-1"
   mutations << m
-  client.mutateRow(t, row, mutations, dummy_attributes)
-  printRow(client.getRow(t, row, dummy_attributes));
+  client.mutateRow(t, row, mutations)
+  printRows(client.getRow(t, row));
 
   mutations = []
   m = Apache::Hadoop::Hbase::Thrift::Mutation.new
@@ -201,8 +204,8 @@ end
   m.column = "entry:sqr"
   m.value = (e*e).to_s
   mutations << m
-  client.mutateRow(t, row, mutations, dummy_attributes, dummy_attributes)
-  printRow(client.getRow(t, row, dummy_attributes))
+  client.mutateRow(t, row, mutations)
+  printRows(client.getRow(t, row))
   
   mutations = []
   m = Apache::Hadoop::Hbase::Thrift::Mutation.new
@@ -213,10 +216,10 @@ end
   m.column = "entry:sqr"
   m.isDelete = 1
   mutations << m
-  client.mutateRowTs(t, row, mutations, 1, dummy_attributes) # shouldn't override latest
-  printRow(client.getRow(t, row, dummy_attributes, dummy_attributes));
+  client.mutateRowTs(t, row, mutations, 1) # shouldn't override latest
+  printRows(client.getRow(t, row));
 
-  versions = client.getVer(t, row, "entry:num", 10, dummy_attributes)
+  versions = client.getVer(t, row, "entry:num", 10)
   print "row: #{row}, values: "
   versions.each do |v|
     print "#{v.value}; "
@@ -224,9 +227,9 @@ end
   puts ""    
   
   begin
-    client.get(t, row, "entry:foo", dummy_attributes)
-    raise "shouldn't get here!"
-  rescue Apache::Hadoop::Hbase::Thrift::NotFound => nf
+    client.get(t, row, "entry:foo")
+    #raise "shouldn't get here!"
+  rescue Apache::Hadoop::Hbase::Thrift::IllegalArgument => nf
     # blank
   end
 
@@ -240,14 +243,11 @@ client.getColumnDescriptors(t).each do |col, desc|
 end
 
 puts "Starting scanner..."
-scanner = client.scannerOpenWithStop(t, "00020", "00040", columns, dummy_attributes)
-begin
-  while (true) 
-    printRow(client.scannerGet(scanner, dummy_attributes))
-  end
-rescue Apache::Hadoop::Hbase::Thrift::NotFound => nf
-  client.scannerClose(scanner)
-  puts "Scanner finished"
-end
+scanner = client.scannerOpenWithStop(t, "00020", "00040", columns)
+
+printRows(client.scannerGet(scanner))
+
+client.scannerClose(scanner)
+puts "Scanner finished"
   
 transport.close()
