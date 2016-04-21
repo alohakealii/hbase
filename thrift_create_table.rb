@@ -1,8 +1,9 @@
-$:.push('./gen-rb')
+$:.push('~/Downloads/thrift-0.9.3/lib/rb/lib')
+$:.push('/opt/hbase-1.1.3/gen-rb')
 require 'thrift'
 require 'hbase'
 
-socket = Thrift::Socket.new( 'ec2-54-215-238-60.us-west-1.compute.amazonaws.com', 9090 )
+socket = Thrift::Socket.new( 'localhost', 9090 )#'ec2-54-215-238-60.us-west-1.compute.amazonaws.com', 9090 )
 transport = Thrift::BufferedTransport.new( socket )
 protocol = Thrift::BinaryProtocol.new( transport )
 client = Apache::Hadoop::Hbase::Thrift::Hbase::Client.new( protocol )
@@ -19,10 +20,7 @@ col = Apache::Hadoop::Hbase::Thrift::ColumnDescriptor.new
 col.name = "secondColumn:"
 columns << col;
 
-if client.createTable(t, columns)
-	puts "#{t} created"
-else
-	puts "something happen?"
-end
+client.createTable(t, columns)
+puts "#{t} created"
 
 transport.close()

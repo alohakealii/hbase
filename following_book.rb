@@ -34,6 +34,9 @@ deleteall 'wiki', 'Home'
 To view everything in a table:
 scan 'wiki'
 
+To see tables:
+list
+
 =end
 ################################################
 
