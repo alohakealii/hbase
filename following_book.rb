@@ -157,6 +157,9 @@ ruby /path/to/thrift_example.rb
 
 # This doesn't automate handling the cluster, but AWS Elastic MapReduce (EMR) is 
 # supposed to be able to do that, but not part of free tier
+
+# DemoClient.rb modified from apache github:
+# https://github.com/apache/hbase/blob/master/hbase-examples/src/main/ruby/DemoClient.rb
 	
 =end
 
