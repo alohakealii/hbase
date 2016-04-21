@@ -110,6 +110,8 @@ create 'links', {NAME => 'to', VERSIONS => 1, BLOOMFILTER => 'ROWCOL'},{NAME => 
 # Creating a separate table has the advantage that the tables have separate regions.
 # This means that the cluster can more effectively split regions as necessary.
 
+# To see all existing tables:
+list
 
 # Populate links table from wiki table
 # ${HBASE_HOME}/bin/hbase shell generate_wiki_links.rb
@@ -135,9 +137,29 @@ thrift --gen rb ~/Downloads/Hbase.thrift
 ${HBASE_HOME}/bin/hbase-daemon.sh start thrift -b 127.0.0.1
 
 # Make thrift_example.rb from book, then run:
+cd ${HBASE_HOME}
 ruby /path/to/thrift_example.rb
 
 =end
+
+#####################################################
+###
+###        CLOUD (Basic AWS instead of Whirr, below)
+###
+#####################################################
+
+=begin 	
+
+# Create AWS account and start an EC2 instance (just use free tier stuff)
+# Setup Hbase and Thrift like local (I didn't use "-b 127.0.0.1" when starting thrift)
+
+# Do operations in remote with local scripts by changing localhost to the server name
+
+# This doesn't automate handling the cluster, but AWS Elastic MapReduce (EMR) is 
+# supposed to be able to do that, but not part of free tier
+	
+=end
+
 
 #########################################
 ###
@@ -145,6 +167,9 @@ ruby /path/to/thrift_example.rb
 ###
 #########################################
 =begin
+################################################
+### COULDNT GET TO WORK. AWS-EC2 API CHANGE? ###
+################################################
 	
 # Download KEYS, whirr-0.7.1.tar.gz, and whirr-0.7.1.tar.gz.asc from http://archive.apache.org/dist/whirr/
 # Use whirr-0.7.1, not 0.8.2
